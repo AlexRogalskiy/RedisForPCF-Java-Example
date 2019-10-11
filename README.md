@@ -10,19 +10,18 @@ This app needs to be pushed to Cloud Foundry. It won't work on your local machin
 ##### Create the Redis Enterprise service instance
 First, you need to create a Redis Enterprise service instance. You'll need to determine what the Redis Enterprise service is called in your PCF installation's service marketplace. To do this, do "cf marketplace". It's likely that you'll encounter one or more of the following three values:
 * <code>redislabs</code>: this is the Redis Enterprise service provided by Redis Labs to people using Pivotal Web Services. It provide HA, durable, and geo-redundant Redis services.
-* * <code>rediscloud</code>: this is the Redis service provided by Redis Labs to people using Pivotal Web Services. 
+* <code>rediscloud</code>: this is the Redis service provided by Redis Labs to people using Pivotal Web Services. 
 * <code>p.redis</code>: this is the new on-demand-brokered Redis for PCF service (provided by pivotal). This service provides a single shard non-HA Redis service.
 
 Once you've determined the name of the service and the name of the plan, create an instance. For example, do <br><code>cf create-service redislabs small-redis my-sample-redis</code><br> or <br><code>cf create-service redislabs small-redis my-sample-redis</code><br>
 
-In case of the on-demand Redis, it will take a few minutes to provision your server. You can continue building/pushing the app but you'll need to wait until creation is complete to bind the service.
 
 ##### Clone, build, and push
-Clone this repo by doing <br> <code>git clone https://github.com/.../code>
+Clone this repo by doing <br> <code>git clone https://github.com/Redislabs-Solution-Architects/RedisForPCF-Java-Example.git</code>
 
 Build the project by doing<br><code>mvn package</code>
 
-Push to PCF by doing<br><code>cf push redisexample -p target/RedisExample-0.0.1-SNAPSHOT.jar</code>
+Push to PCF by doing<br><code>cf push</code>
 
 ##### Try app in unbound state
 If the above steps were successful, the app will be running on Cloud Foundry but the Redis service instance you created in the first step is not yet bound to the app. In this state, you can try the app's endpoints (detailed below) to see how things work in this state. As you have not bound Redis, you will not be able to see any service credentials or write any keys to the store.
