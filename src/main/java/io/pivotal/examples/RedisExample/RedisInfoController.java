@@ -1,18 +1,18 @@
 
 package io.pivotal.examples.RedisExample;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import redis.clients.jedis.Jedis;
+
+
+
 
 @RestController
 public class RedisInfoController {
@@ -61,11 +61,16 @@ public class RedisInfoController {
         JsonElement root = new JsonParser().parse(vcap);
         JsonObject redis = null;
         if (root != null) {
-            if (root.getAsJsonObject().has("p.redis")) {
+            if (root.getAsJsonObject().has("redislabs")) {
+                redis = root.getAsJsonObject().get("redislabs").getAsJsonArray().get(0).getAsJsonObject();
+                LOG.log(Level.WARNING, "instance name: " + redis.get("name").getAsString());
+            } else if (root.getAsJsonObject().has("rediscloud")) {
+                redis = root.getAsJsonObject().get("rediscloud").getAsJsonArray().get(0).getAsJsonObject();
+                LOG.log(Level.WARNING, "instance name: " + redis.get("name").getAsString());
+            } else if (root.getAsJsonObject().has("p.redis")) {
                 redis = root.getAsJsonObject().get("p.redis").getAsJsonArray().get(0).getAsJsonObject();
                 LOG.log(Level.WARNING, "instance name: " + redis.get("name").getAsString());
-            }
-            else if (root.getAsJsonObject().has("p-redis")) {
+            }else if (root.getAsJsonObject().has("p-redis")) {
                 redis = root.getAsJsonObject().get("p-redis").getAsJsonArray().get(0).getAsJsonObject();
                 LOG.log(Level.WARNING, "instance name: " + redis.get("name").getAsString());
             }
@@ -78,7 +83,10 @@ public class RedisInfoController {
         if (redis != null) {
             JsonObject creds = redis.get("credentials").getAsJsonObject();
             RedisInstanceInfo info = new RedisInstanceInfo();
+            // if you have DNS enabled:
             info.setHost(creds.get("host").getAsString());
+            // if you don't have DNS enabled:
+            //info.setHost(creds.getAsJsonArray("ip_list").get(0).getAsString());
             info.setPort(creds.get("port").getAsInt());
             info.setPassword(creds.get("password").getAsString());
 

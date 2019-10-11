@@ -1,24 +1,24 @@
-# Redis for PCF Java Sample App
+# Redis Enterprise for PCF Java Sample App
 
-This project demonstrates how to use Redis for PCF to create a Redis service instance and connect to it without using Spring Cloud Connectors. If you are building a Spring Boot app you may wish to investigate that approach here: https://cloud.spring.io/spring-cloud-connectors/
+This project demonstrates how to use Redis for PCF to create a Redis Enterprise service instance and connect to it without using Spring Cloud Connectors. If you are building a Spring Boot app you may wish to investigate that approach here: https://cloud.spring.io/spring-cloud-connectors/
 
 Cloud Foundry sets certain configuration values such as service dependency connection information in an environment variable called VCAP_SERVICES inside the container where your app is running. This sample app parses VCAP_SERVICES to pull out the necessary connection information from there and then connects to Redis if it can.
 
 This app needs to be pushed to Cloud Foundry. It won't work on your local machine.
 
 ### How to deploy
-##### Create the Redis service instance
-First, you need to create a Redis service instance. You'll need to determine what the Redis service is called in your PCF installation's service marketplace. To do this, do "cf marketplace". It's likely that you'll encounter one or more of the following three values:
-* <code>p-redis</code>: this is the older non-on-demand-brokered Redis for PCF service. By default, the available plans will be called <code>shared</code> and <code>dedicated</code>; you can run this sample using the <code>shared</code> plan which is less resource-intensive than the <code>dedicated</code> plan.
-* <code>p.redis</code>: this is the new on-demand-brokered Redis for PCF service. By default, the available plans will be called <code>cache-small</code>, <code>cache-medium</code>, and <code>cache-large</code>; the <code>cache-small</code> plan is more enough to run this sample.
-* <code>rediscloud</code>: this is the Redis service provided by a partner to people using Pivotal Web Services. This app requires minor changes to work with PWS.
+##### Create the Redis Enterprise service instance
+First, you need to create a Redis Enterprise service instance. You'll need to determine what the Redis Enterprise service is called in your PCF installation's service marketplace. To do this, do "cf marketplace". It's likely that you'll encounter one or more of the following three values:
+* <code>redislabs</code>: this is the Redis Enterprise service provided by Redis Labs to people using Pivotal Web Services. It provide HA, durable, and geo-redundant Redis services.
+* * <code>rediscloud</code>: this is the Redis service provided by Redis Labs to people using Pivotal Web Services. 
+* <code>p.redis</code>: this is the new on-demand-brokered Redis for PCF service (provided by pivotal). This service provides a single shard non-HA Redis service.
 
-Once you've determined the name of the service and the name of the plan, create an instance. For example, do <br><code>cf create-service p-redis shared my-sample-redis</code><br> or <br><code>cf create-service p.redis cache-small my-sample-redis</code><br>
+Once you've determined the name of the service and the name of the plan, create an instance. For example, do <br><code>cf create-service redislabs small-redis my-sample-redis</code><br> or <br><code>cf create-service redislabs small-redis my-sample-redis</code><br>
 
 In case of the on-demand Redis, it will take a few minutes to provision your server. You can continue building/pushing the app but you'll need to wait until creation is complete to bind the service.
 
 ##### Clone, build, and push
-Clone this repo by doing <br> <code>git clone https://github.com/colrich/RedisForPCF-Java-Example.git</code>
+Clone this repo by doing <br> <code>git clone https://github.com/.../code>
 
 Build the project by doing<br><code>mvn package</code>
 
